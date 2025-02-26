@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, notes,NotesDetailView, delete_note, homework, update_homework, delete_homework, youtube, todo, update_todo, delete_todo, books, dictionary
+from .views import home, notes,NotesDetailView, delete_note, homework, update_homework, delete_homework, youtube, todo, update_todo, delete_todo, books, dictionary, wiki, conversion
 
 urlpatterns = [
     path('', home, name='home'),
@@ -15,4 +15,6 @@ urlpatterns = [
     path('delete_todo/<int:pk>/', delete_todo, name='delete-todo'),
     path('books/', books, name='books'),
     path('dictionary/', dictionary, name='dictionary'),
+    path('wiki/', wiki, name='wiki'),
+    path('conversion/', conversion, name='conversion'),
 ]

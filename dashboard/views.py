@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import NotesForm, HomeworkForm, DashboardForm, TodoForm
+from .forms import NotesForm, HomeworkForm, DashboardForm, TodoForm, ConversionForm, ConversionLengthForm, ConversionMassForm
 from .models import Notes, Homework, Todo
 from django.views import generic
 from youtubesearchpython import VideosSearch
 import requests
+import wikipedia
 
 def home(request):
     return render(request, 'dashboard/home.html')
@@ -257,3 +258,62 @@ def dictionary(request):
         form = DashboardForm()
 
     return render(request, 'dashboard/dictionary.html', {'form': form})
+
+def wiki(request):
+    if request.method == "POST":
+        form = DashboardForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+            form = DashboardForm(request.POST)
+            search = wikipedia.page(text)
+            context = {
+                'form':form,
+                'title': search.title,
+                'link': search.url,
+                'details': search.summary
+            }
+            return render(request, 'dashboard/wiki.html', context)
+    else:
+        form = DashboardForm()
+        context = {
+        'form': form
+    }        
+    return render(request, 'dashboard/wiki.html', context)
+
+def conversion(request):
+    if request.method == "POST":
+        form = ConversionForm(request.POST)
+        if request.POST['measurement'] == 'length':
+            measurement_form = ConversionLengthForm()
+            context = {
+                'form': form,
+                'm_form': measurement_form,
+                'input':  True
+            }
+            if 'input' in request.POST:
+                first = request.POST['measure1']
+                second = request.POST['measure2']
+                input = request.POST['input']
+                answer = ''
+                if input and int(input) >= 0:
+                    if first == 'yard' and second == 'foot':
+                        answer = f'{input} yard = {int(input)*3} foot' 
+                    if first == 'foot' and second == 'yard':
+                        answer = f'{input} foot = {int(input)/3} yard' 
+                    context = {
+                        'form': form,
+                        'm_form': measurement_form,
+                        'input': True,
+                        'answer': answer
+                    }       
+        else:
+            pass
+
+    else:    
+        form = ConversionForm()
+
+        context = {
+        'form': form,
+        'input': False
+    }
+    return render(request, 'dashboard/conversion.html', context)
