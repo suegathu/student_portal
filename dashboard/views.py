@@ -6,10 +6,11 @@ from django.views import generic
 from youtubesearchpython import VideosSearch
 import requests
 import wikipedia
+from django.contrib.auth.decorators import login_required 
 
 def home(request):
     return render(request, 'dashboard/home.html')
-
+@login_required
 def notes(request):
     if request.method == 'POST':
         form = NotesForm(request.POST)
@@ -28,14 +29,16 @@ def notes(request):
     }
 
     return render(request, 'dashboard/notes.html', context)
-
+@login_required
 def delete_note(request, pk=NotImplemented):
     Notes.objects.get(id=pk).delete()
     return redirect('notes')
 
+
 class NotesDetailView(generic.DetailView):
     model = Notes
     
+@login_required    
 def homework(request):
     if request.method == "POST":
         form = HomeworkForm(request.POST)
@@ -71,6 +74,8 @@ def homework(request):
         'form': form
     }
     return render(request, 'dashboard/homework.html', context)
+
+@login_required
 def update_homework(request, pk=None):
     homework = Homework.objects.get(id=pk)
     if homework.is_finished == True:
@@ -80,6 +85,7 @@ def update_homework(request, pk=None):
     homework.save()
     return redirect('homework')       
 
+@login_required
 def delete_homework(request, pk=None):
     Homework.objects.get(id=pk).delete()
     return redirect('homework')     
@@ -122,6 +128,7 @@ def youtube(request):
     }
     return render(request, 'dashboard/youtube.html', context)
 
+@login_required
 def todo(request):
     form = TodoForm()
     if request.method == "POST":
@@ -159,6 +166,7 @@ def todo(request):
     }
     return render(request, 'dashboard/todo.html', context)
 
+@login_required
 def update_todo(request, pk=None):
     todo = Todo.objects.get(id=pk)
     if todo.is_finished == True:
@@ -167,9 +175,12 @@ def update_todo(request, pk=None):
         todo.is_finished = True   
     todo.save()
     return redirect('todo')     
+
+@login_required
 def delete_todo(request, pk=None):
     Todo.objects.get(id=pk).delete()
     return redirect('todo')
+
 
 def books(request):
     if request.method == "POST":
@@ -356,5 +367,23 @@ def register(request):
     }
     return render(request, 'dashboard/register.html', context)
 
+@login_required
 def profile(request):
-    return render(request, 'dashboard/profile.html')
+    homeworks = Homework.objects.filter(is_finished = False, user = request.user)
+    todos = Todo.objects.filter(is_finished = False, user = request.user)
+    if len(homeworks) == 0:
+        homework_done = True
+    else:
+        homework_done = False   
+    if len(todos) == 0:
+        todo_done = True
+    else:
+        todo_done = False  
+    context = {
+       'homeworks': homeworks,
+       'todos': todos,
+       'homework_done' : homework_done,
+       'todo_done': todo_done
+    }         
+    return render(request, 'dashboard/profile.html', context)
+

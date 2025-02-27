@@ -20,17 +20,22 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Student Study Portal</a>        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        <a class="navbar-brand" href="#">Student Study Portal</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
           <ul class="navbar-nav mb-2 mb-lg-0">
+
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
+
+            {% if user.is_authenticated %}
+            <!-- Show Profile & Options ONLY if logged in -->
             <li class="nav-item">
-              <a class="nav-link" href="#">Profile</a>
+              <a class="nav-link" href="{% url 'profile'%}">Profile</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -41,9 +46,8 @@
                 <a class="dropdown-item" href="#">Books</a>
                 <a class="dropdown-item" href="#">Wikipedia</a>
                 <div class="dropdown-divider"></div>
-
                 <a class="dropdown-item" href="#">Dictionary</a>
-                <a class="dropdown-item" href="#">Youtube</a>
+                <a class="dropdown-item" href="#">YouTube</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">To-do</a>
                 <a class="dropdown-item" href="#">Homework</a>
@@ -54,23 +58,32 @@
               </div>
             </li>
 
+            <!-- Logout Button for Logged-in Users -->
             <li class="nav-item">
-              <a class="nav-link" href="#">Logout</a>
+              <form action="{% url 'logout' %}" method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Logout</button>
+              </form>
+            </li>
+
+            {% else %}
+            <!-- Show Register and Login if NOT logged in -->
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'register' %}">Register</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Register</a>
+              <a class="nav-link" href="{% url 'login' %}">Login</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Login</a>
-            </li>
+            {% endif %}
+
           </ul>
         </div>
       </div>
     </nav>
   </header>
   <br /><br />
-  <main>
 
+  <main>
     {% if messages %}
     {% for message in messages %}
     <div class="alert alert-{{message.tags}}">{{message}}</div>
@@ -79,8 +92,8 @@
 
     {% block content %}
     {% endblock content %}
-
   </main>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
     integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
