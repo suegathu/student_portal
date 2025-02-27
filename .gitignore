@@ -9,7 +9,7 @@ db.sqlite3
 .vscode/
 .idea/
 *.swp
-/static/
 /media/
 *.cache
 *.pid
+.env
