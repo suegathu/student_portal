@@ -306,9 +306,9 @@ def conversion(request):
             })
 
             if 'input' in request.POST:
-                first = request.POST.get['measure1']
-                second = request.POST.get['measure2']
-                input = request.POST.get['input']
+                first = request.POST.get('measure1')
+                second = request.POST.get('measure2')
+                input = request.POST.get('input')
                 answer = ''
 
                 if input and int(input) >= 0:
@@ -327,9 +327,9 @@ def conversion(request):
             })
 
             if 'input' in request.POST:
-                first = request.POST.get['measure1']
-                second = request.POST.get['measure2']
-                input = request.POST.get['input']
+                first = request.POST.get('measure1')
+                second = request.POST.get('measure2')
+                input = request.POST.get('input')
                 answer = ''
 
                 if input and int(input) >= 0:
