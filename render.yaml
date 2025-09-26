@@ -15,7 +15,7 @@ services:
           name: student-portal-db
           property: connectionString
       - key: ALLOWED_HOSTS
-        value: student-portal.onrender.com
+        value: *.onrender.com
     healthCheckPath: /
     autoDeploy: true
 

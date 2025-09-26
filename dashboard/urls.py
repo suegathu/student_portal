@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import home, notes,NotesDetailView, delete_note, homework, update_homework, delete_homework, youtube, todo, update_todo, delete_todo, books, dictionary, wiki, conversion, register
+from .views import home, health_check, notes,NotesDetailView, delete_note, homework, update_homework, delete_homework, youtube, todo, update_todo, delete_todo, books, dictionary, wiki, conversion, register
 
 urlpatterns = [
     path('', home, name='home'),
+    path('health/', health_check, name='health_check'),
     path('notes/', notes, name='notes'),
     path('delete_note/<int:pk>', delete_note, name='delete-note'),
     path('notes_detail/<int:pk>', NotesDetailView.as_view(), name='notes-detail'),

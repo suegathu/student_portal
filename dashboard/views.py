@@ -10,6 +10,10 @@ from django.contrib.auth.decorators import login_required
 
 def home(request):
     return render(request, 'dashboard/home.html')
+
+def health_check(request):
+    from django.http import JsonResponse
+    return JsonResponse({"status": "ok", "message": "Student Portal API is running"})
 @login_required
 def notes(request):
     if request.method == 'POST':
