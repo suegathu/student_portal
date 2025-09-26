@@ -60,11 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-if DEBUG:
-    MIDDLEWARE.insert(0, 'django.middleware.debug.log_404_why')
-else:
-    # Production debugging
-    pass
+# Debug middleware removed for production stability
 
 ROOT_URLCONF = 'ssp.urls'
 
