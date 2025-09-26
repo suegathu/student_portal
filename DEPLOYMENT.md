@@ -21,7 +21,6 @@
    SECRET_KEY=your-secret-key-here
    DEBUG=False
    ALLOWED_HOSTS=your-app-name.vercel.app
-   DATABASE_URL=sqlite:///db.sqlite3
    ```
 
 3. **Deploy**
@@ -29,13 +28,26 @@
    - Wait for deployment to complete
    - Your app will be available at `https://your-app-name.vercel.app`
 
-### 3. Database Setup (Optional)
-For production, consider using:
+### 3. Important Notes for Vercel
+- The app uses SQLite database (included in the project)
+- Static files are served by WhiteNoise
+- No external database required for basic functionality
+
+### 4. Database Setup (Optional)
+For production with external database:
 - **Vercel Postgres** (recommended)
 - **PlanetScale** (MySQL)
 - **Supabase** (PostgreSQL)
 
-### 4. Custom Domain (Optional)
+To use external database, update `ssp/settings.py`:
+```python
+# Comment out SQLite config and uncomment:
+DATABASES = {
+    "default": dj_database_url.parse(config("DATABASE_URL"))
+}
+```
+
+### 5. Custom Domain (Optional)
 - Go to Settings → Domains
 - Add your custom domain
 - Follow DNS configuration instructions
@@ -76,6 +88,7 @@ python manage.py runserver
 2. **Static files not loading**: Run `python manage.py collectstatic`
 3. **Database errors**: Verify `DATABASE_URL` environment variable
 4. **Import errors**: Check all dependencies in `requirements.txt`
+5. **500 Error on Vercel**: Check Vercel logs and ensure all environment variables are set
 
 ### Support:
 - Check Vercel logs in dashboard

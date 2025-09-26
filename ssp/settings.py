@@ -80,9 +80,18 @@ WSGI_APPLICATION = 'ssp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Use SQLite for Vercel deployment (serverless-friendly)
 DATABASES = {
-    "default": dj_database_url.parse(config("DATABASE_URL"))
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+# For production with external database, uncomment below and comment above
+# DATABASES = {
+#     "default": dj_database_url.parse(config("DATABASE_URL"))
+# }
 
 
 # Password validation
