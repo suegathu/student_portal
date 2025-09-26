@@ -30,6 +30,10 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
 
+# Enhanced production settings
+if not DEBUG:
+    ALLOWED_HOSTS.extend(['localhost', '127.0.0.1', '.onrender.com'])
+
 
 # Application definition
 
@@ -47,12 +51,12 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -80,18 +84,15 @@ WSGI_APPLICATION = 'ssp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# Use SQLite for Vercel deployment (serverless-friendly)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# Database configuration for Neon PostgreSQL and local SQLite
+DATABASE_URL = config("DATABASE_URL", default="sqlite:///db.sqlite3")
 
-# For production with external database, uncomment below and comment above
-# DATABASES = {
-#     "default": dj_database_url.parse(config("DATABASE_URL"))
-# }
+DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
+
+# Configure connection pooling for production PostgreSQL/Neon
+if not DATABASE_URL.startswith("sqlite"):
+    DATABASES["default"]["CONN_MAX_AGE"] = 600
+    DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
 
 
 # Password validation
@@ -128,16 +129,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 LOGIN_REDIRECT_URL = 'home'

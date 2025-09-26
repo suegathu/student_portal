@@ -3,6 +3,7 @@ django-crispy-forms==2.3
 crispy-bootstrap4==2024.10
 python-decouple==3.8
 dj-database-url==2.3.0
+psycopg2-binary==2.9.10
 whitenoise==6.9.0
 gunicorn==23.0.0
 requests==2.32.3
