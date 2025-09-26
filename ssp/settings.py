@@ -32,7 +32,13 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lamb
 
 # Enhanced production settings for Render deployment
 if not DEBUG:
-    ALLOWED_HOSTS.extend(['*', '.onrender.com'])
+    # Production setup for well-known hosts:
+    ALLOWED_HOSTS.extend([
+        '*', '.onrender.com', '*.onrender.com',
+        'student-portal-1-zyif.onrender.com',
+    ])
+else:
+    ALLOWED_HOSTS.extend(['*'])  # DEBUG mode includes all
 
 
 # Application definition
