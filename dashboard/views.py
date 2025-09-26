@@ -14,6 +14,15 @@ def home(request):
 def health_check(request):
     from django.http import JsonResponse
     return JsonResponse({"status": "ok", "message": "Student Portal API is running"})
+
+def debug_info(request):
+    """Simple debug endpoint"""
+    from django.http import JsonResponse
+    return JsonResponse({
+        "url": request.path,
+        "method": request.method,
+        "user_agent": request.META.get('HTTP_USER_AGENT', ''),
+    })
 @login_required
 def notes(request):
     if request.method == 'POST':

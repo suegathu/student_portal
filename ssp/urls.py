@@ -8,6 +8,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('health/', dash_views.health_check, name='health'),
+    path('debug/', dash_views.debug_info, name='debug'),
     path('', include('dashboard.urls')),
     path('register/', dash_views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='dashboard/login.html'), name='login'),
